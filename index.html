@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Perfect Roommate — Candidate Profile Cards (B1)</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#101a33;
+      --card2:#0f1830;
+      --text:#eef2ff;
+      --muted:#c7cffc;
+      --line:rgba(255,255,255,.12);
+      --accent:#7dd3fc;
+      --accent2:#a78bfa;
+      --good:#86efac;
+      --bad:#fca5a5;
+      --shadow: 0 18px 50px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(900px 500px at 12% 8%, rgba(167,139,250,.25), transparent 55%),
+                  radial-gradient(800px 520px at 78% 18%, rgba(125,211,252,.25), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+    }
+
+    .app{ width:min(1100px, 100%); }
+
+    header{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      align-items:flex-end;
+      justify-content:space-between;
+      margin-bottom:18px;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(22px, 2.8vw, 34px);
+      letter-spacing:.2px;
+    }
+
+    .subtitle{
+      margin:6px 0 0;
+      color:var(--muted);
+      max-width:70ch;
+      line-height:1.35;
+      font-size:14px;
+    }
+
+    .teacher-note{
+      background: linear-gradient(180deg, rgba(125,211,252,.14), rgba(167,139,250,.10));
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      font-size:13px;
+      color:var(--muted);
+      min-width:min(420px, 100%);
+    }
+    .teacher-note b{color:var(--text)}
+
+    .layout{
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap:16px;
+      align-items:start;
+    }
+
+    @media (max-width: 900px){
+      .layout{grid-template-columns: 1fr;}
+    }
+
+    .nav{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:14px;
+      position:sticky;
+      top:18px;
+    }
+
+    .nav h2{
+      font-size:14px;
+      margin:0 0 10px;
+      color:var(--muted);
+      letter-spacing:.3px;
+      text-transform:uppercase;
+    }
+
+    .candidate-btn{
+      width:100%;
+      text-align:left;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      padding:12px 12px;
+      border-radius:14px;
+      cursor:pointer;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease;
+      margin-bottom:10px;
+    }
+    .candidate-btn:hover{transform: translateY(-1px); background:rgba(255,255,255,.07)}
+    .candidate-btn[aria-selected="true"]{
+      border-color: rgba(125,211,252,.6);
+      background: linear-gradient(90deg, rgba(125,211,252,.20), rgba(167,139,250,.10));
+    }
+
+    .badge{
+      width:34px;
+      height:34px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      font-weight:800;
+      letter-spacing:.3px;
+      box-shadow: 0 10px 26px rgba(0,0,0,.3);
+      border:1px solid rgba(255,255,255,.18);
+      flex:0 0 auto;
+    }
+    .badge.a{background: rgba(125,211,252,.22); color:#dff6ff;}
+    .badge.b{background: rgba(167,139,250,.22); color:#f1eaff;}
+    .badge.c{background: rgba(134,239,172,.18); color:#eafff1;}
+
+    .btn-text{display:flex; flex-direction:column; gap:2px;}
+    .btn-text .name{font-weight:700;}
+    .btn-text .tag{font-size:12px; color:var(--muted)}
+
+    .help{
+      margin-top:12px;
+      padding-top:12px;
+      border-top:1px solid var(--line);
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.4;
+    }
+
+    .help .question{
+      display:block;
+      margin-top:10px;
+      padding:10px;
+      border-radius:12px;
+      border:1px dashed rgba(255,255,255,.20);
+      background: rgba(0,0,0,.12);
+      color:var(--muted);
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:16px;
+      overflow:hidden;
+    }
+
+    .hero{
+      display:flex;
+      gap:16px;
+      align-items:stretch;
+      flex-wrap:wrap;
+    }
+
+    /* PHOTO BOX (image only, no text overlay) */
+    .photo{
+      width:180px;
+      height:180px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.14);
+      position:relative;
+      overflow:hidden;
+      padding:0;
+    }
+    .photo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .bio{
+      flex:1 1 320px;
+      min-width:260px;
+    }
+
+    .topline{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:10px;
+      margin-bottom:8px;
+    }
+
+    .topline h2{
+      margin:0;
+      font-size:26px;
+      letter-spacing:.2px;
+    }
+
+    .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.05);
+      color:var(--muted);
+      font-size:12px;
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      white-space:nowrap;
+    }
+
+    .pill .dot{width:8px; height:8px; border-radius:50%; background: var(--accent); opacity:.9;}
+
+    .meta{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .meta .box{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius:14px;
+      padding:10px 12px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.3;
+    }
+    .meta .box b{color:var(--text)}
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+      margin-top:16px;
+    }
+
+    @media (max-width: 700px){
+      .grid{grid-template-columns: 1fr;}
+    }
+
+    .section{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.10);
+      border-radius:16px;
+      padding:12px;
+    }
+
+    .section h3{
+      margin:0 0 10px;
+      font-size:14px;
+      letter-spacing:.25px;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    ul{margin:0; padding-left:18px; color:var(--text); line-height:1.4;}
+    li{margin:6px 0;}
+
+    .good h3{color: rgba(134,239,172,.95)}
+    .bad h3{color: rgba(252,165,165,.95)}
+
+    .quote{
+      margin-top:14px;
+      padding:12px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      color:var(--text);
+    }
+
+    .quote p{margin:0; font-size:15px; line-height:1.4;}
+    .quote .mark{font-weight:900; margin-right:6px; opacity:.9;}
+
+    .controls{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .control{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      font-size:13px;
+    }
+
+    .checkbox{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .checkbox input{width:18px; height:18px; accent-color: var(--accent);}
+
+    .footer{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.4;
+      border-top:1px solid var(--line);
+      padding-top:12px;
+    }
+
+    .compare{
+      display:none;
+      margin-top:14px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.10);
+      border-radius:16px;
+      padding:12px;
+    }
+
+    .compare h3{margin:0 0 10px; color:var(--muted); font-size:14px; text-transform:uppercase; letter-spacing:.25px;}
+
+    .compare .row{
+      display:grid;
+      grid-template-columns: 120px 1fr;
+      gap:10px;
+      padding:8px 0;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+    .compare .row:first-of-type{border-top:none; padding-top:0;}
+
+    .label-sm{color:var(--muted); font-weight:700; font-size:13px;}
+
+    .note{
+      margin-top:10px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+      padding:2px 6px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.05);
+      color:var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>The Perfect Roommate</h1>
+        <p class="subtitle">Explore the candidate profile cards. Then compare them and argue who is the best roommate for <b>you</b> (or for a situation your teacher gives you).</p>
+      </div>
+      <div class="teacher-note">
+        <b>Teacher tip:</b> Think about the things you consider are on favor of the candidate you choose. You must be ready to convince others using <b>reasons</b> and <b>examples</b>.
+        <div style="margin-top:6px;">Useful phrases: <i>In my opinion… / I prefer… / That could be a problem because… / On the other hand…</i></div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="nav" aria-label="Candidate navigation">
+        <h2>Choose a candidate</h2>
+
+        <button class="candidate-btn" data-id="A" aria-selected="true">
+          <div class="badge a">A</div>
+          <div class="btn-text">
+            <div class="name" id="navNameA">Nina Torres (28)</div>
+            <div class="tag" id="navTagA">The Friendly Hurricane</div>
+          </div>
+        </button>
+
+        <button class="candidate-btn" data-id="B" aria-selected="false">
+          <div class="badge b">B</div>
+          <div class="btn-text">
+            <div class="name" id="navNameB">Daniel Park (32)</div>
+            <div class="tag" id="navTagB">The Quiet Controller</div>
+          </div>
+        </button>
+
+        <button class="candidate-btn" data-id="C" aria-selected="false">
+          <div class="badge c">C</div>
+          <div class="btn-text">
+            <div class="name" id="navNameC">Leo Ramirez (26)</div>
+            <div class="tag" id="navTagC">The Chill Drifter</div>
+          </div>
+        </button>
+
+        <div class="help">
+          <div><b>How to use:</b></div>
+          <div>1) Click A, B, or C.</div>
+          <div>2) Read the good and bad habits.</div>
+          <div>3) Decide: <b>best roommate</b> for you?</div>
+          <span class="question">Discussion question: <b>What is your “must-have” rule</b> for a roommate?</span>
+          <div class="note">Tip: Use <span class="kbd">Tab</span> and <span class="kbd">Enter</span> to navigate with the keyboard.</div>
+        </div>
+      </aside>
+
+      <main class="card" aria-live="polite">
+        <div class="hero">
+          <div class="photo" id="photoBox">
+            <img id="profilePhoto" src="" alt="Profile photo" />
+          </div>
+
+          <div class="bio">
+            <div class="topline">
+              <h2 id="nameAge">Nina Torres (28)</h2>
+              <span class="pill" id="tagline"><span class="dot"></span> The Friendly Hurricane</span>
+            </div>
+
+            <div class="meta">
+              <div class="box"><b>Job Title:</b><br><span id="jobTitle">Event assistant</span></div>
+              <div class="box"><b>Style:</b><br><span id="styleHint">Social • Loud • Generous</span></div>
+            </div>
+
+            <div class="controls">
+              <div class="control checkbox">
+                <input id="toggleCompare" type="checkbox" />
+                <label for="toggleCompare">Show quick compare table</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <section class="section good">
+            <h3>Habits &amp; Lifestyle (The Good)</h3>
+            <ul id="goodList"></ul>
+          </section>
+
+          <section class="section bad">
+            <h3>Habits &amp; Lifestyle (The Bad)</h3>
+            <ul id="badList"></ul>
+          </section>
+        </div>
+
+        <div class="quote" aria-label="Direct quote">
+          <p><span class="mark">“</span><span id="quoteText">Don’t worry, I’ll share my food—let’s make this place feel like home!</span><span class="mark">”</span></p>
+        </div>
+
+        <section class="compare" id="compareBox">
+          <h3>Quick compare</h3>
+          <div class="row"><div class="label-sm">Noise</div><div id="cmpNoise">Very loud</div></div>
+          <div class="row"><div class="label-sm">Cleanliness</div><div id="cmpClean">Very messy</div></div>
+          <div class="row"><div class="label-sm">Visitors</div><div id="cmpVisitors">Many friends visit often</div></div>
+          <div class="row"><div class="label-sm">Money</div><div id="cmpMoney">Pays on time</div></div>
+          <div class="row"><div class="label-sm">Best for</div><div id="cmpBestFor">Someone who likes a busy home</div></div>
+          <div class="note">Now compare: Which “bad” point is the biggest problem for you?</div>
+        </section>
+
+        <div class="footer">
+          <b>Task:</b> Choose the best roommate. Give <b>3 reasons</b> and <b>1 warning</b>.
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const candidates = {
+      A: {
+        nameAge: "Nina Torres (28)",
+        jobTitle: "Event assistant",
+        tagline: "The Friendly Hurricane",
+        styleHint: "Social • Loud • Generous",
+        good: [
+          "Pays rent on time and offers to help with bills.",
+          "Loves to cook and shares food with everyone.",
+          "Friendly and welcoming; knows many neighbors."
+        ],
+        bad: [
+          "Leaves clothes and bags on the floor.",
+          "Plays music and talks on the phone late at night.",
+          "Invites friends over without warning."
+        ],
+        quote: "Don’t worry, I’ll share my food—let’s make this place feel like home!",
+        photo: "images/nina.jpg",
+        compare: {
+          noise: "Very loud",
+          clean: "Very messy",
+          visitors: "Many friends visit often",
+          money: "Pays on time",
+          bestFor: "Someone who likes a busy home"
+        }
+      },
+      B: {
+        nameAge: "Daniel Park (32)",
+        jobTitle: "Accountant",
+        tagline: "The Quiet Controller",
+        styleHint: "Organized • Serious • Quiet",
+        good: [
+          "Keeps the kitchen and bathroom very clean.",
+          "Plans shopping and pays bills early.",
+          "Respects sleep; always quiet at night."
+        ],
+        bad: [
+          "Hates visitors and says “no guests” most of the time.",
+          "Has strict rules about shoes, noise, and cleaning.",
+          "Can be cold and not very friendly."
+        ],
+        quote: "I like peace and order. Please follow the house rules.",
+        photo: "images/daniel.jpg",
+        compare: {
+          noise: "Very quiet",
+          clean: "Very clean",
+          visitors: "Almost no visitors",
+          money: "Very careful with money",
+          bestFor: "Someone who needs calm and structure"
+        }
+      },
+      C: {
+        nameAge: "Leo Ramirez (26)",
+        jobTitle: "Between jobs (freelance sometimes)",
+        tagline: "The Chill Drifter",
+        styleHint: "Relaxed • Easygoing • Unreliable",
+        good: [
+          "Very calm and rarely gets angry.",
+          "Easy to live with; does not complain much.",
+          "Likes simple routines and a quiet evening."
+        ],
+        bad: [
+          "Doesn’t have a stable job, so money is a problem.",
+          "Often forgets due dates and pays late.",
+          "Has a pet tarantula in a glass box (and talks to it)."
+        ],
+        quote: "It’ll work out… relax. Also, don’t worry—Spider is friendly.",
+        photo: "images/leo.jpg",
+        compare: {
+          noise: "Quiet to medium",
+          clean: "Okay, but not perfect",
+          visitors: "Few visitors",
+          money: "Unreliable payments",
+          bestFor: "Someone who accepts risks and wants a relaxed home"
+        }
+      }
+    };
+
+    const elements = {
+      nameAge: document.getElementById('nameAge'),
+      jobTitle: document.getElementById('jobTitle'),
+      tagline: document.getElementById('tagline'),
+      styleHint: document.getElementById('styleHint'),
+      goodList: document.getElementById('goodList'),
+      badList: document.getElementById('badList'),
+      quoteText: document.getElementById('quoteText'),
+      compareBox: document.getElementById('compareBox'),
+      cmpNoise: document.getElementById('cmpNoise'),
+      cmpClean: document.getElementById('cmpClean'),
+      cmpVisitors: document.getElementById('cmpVisitors'),
+      cmpMoney: document.getElementById('cmpMoney'),
+      cmpBestFor: document.getElementById('cmpBestFor'),
+      toggleCompare: document.getElementById('toggleCompare')
+    };
+
+    function renderList(ul, items){
+      ul.innerHTML = '';
+      for(const text of items){
+        const li = document.createElement('li');
+        li.textContent = text;
+        ul.appendChild(li);
+      }
+    }
+
+    function setCandidate(id){
+      const c = candidates[id];
+      elements.nameAge.textContent = c.nameAge;
+      elements.jobTitle.textContent = c.jobTitle;
+      elements.tagline.innerHTML = '<span class="dot"></span> ' + c.tagline;
+      elements.styleHint.textContent = c.styleHint;
+      renderList(elements.goodList, c.good);
+      renderList(elements.badList, c.bad);
+      elements.quoteText.textContent = c.quote;
+
+      // photo (always update)
+      const img = document.getElementById('profilePhoto');
+      img.src = c.photo;
+      img.alt = c.nameAge + " profile photo";
+
+      // compare
+      elements.cmpNoise.textContent = c.compare.noise;
+      elements.cmpClean.textContent = c.compare.clean;
+      elements.cmpVisitors.textContent = c.compare.visitors;
+      elements.cmpMoney.textContent = c.compare.money;
+      elements.cmpBestFor.textContent = c.compare.bestFor;
+
+      // update selected button
+      document.querySelectorAll('.candidate-btn').forEach(btn => {
+        btn.setAttribute('aria-selected', btn.dataset.id === id ? 'true' : 'false');
+      });
+    }
+
+    document.querySelectorAll('.candidate-btn').forEach(btn => {
+      btn.addEventListener('click', () => setCandidate(btn.dataset.id));
+    });
+
+    elements.toggleCompare.addEventListener('change', (e) => {
+      elements.compareBox.style.display = e.target.checked ? 'block' : 'none';
+    });
+
+    // Initial render
+    setCandidate('A');
+  </script>
+</body>
+</html>
