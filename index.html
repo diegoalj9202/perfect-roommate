@@ -233,10 +233,30 @@
       padding:0;
       flex:0 0 auto;
     }
+
+    /* ERROR MESSAGE STYLING */
+    .img-error-msg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #1a1010;
+      color: #fca5a5;
+      padding: 10px;
+      font-size: 11px;
+      display: none; /* Hidden by default */
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      line-height: 1.3;
+      overflow-y: auto;
+    }
+    .img-error-msg b { display: block; margin-bottom: 4px; text-transform: uppercase; }
     
     @media (max-width: 500px) {
        .photo { width: 100px; height: 100px; }
        .hero { flex-wrap: nowrap; }
+       .img-error-msg { font-size: 9px; padding: 4px; }
     }
 
     .photo img{
@@ -584,6 +604,60 @@
       margin-top:8px;
       line-height:1.35;
     }
+
+    /* --- DICTIONARY BUBBLE --- */
+    .dict-bubble {
+      position: fixed;
+      z-index: 9999;
+      background: var(--card2);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 16px;
+      width: 280px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      font-size: 14px;
+      color: var(--text);
+      display: none; /* Hidden default */
+      top: 0; left: 0;
+      animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn { from{transform: scale(0.9); opacity:0;} to{transform: scale(1); opacity:1;} }
+    
+    .dict-bubble .close-btn {
+      position: absolute;
+      top: 8px; right: 8px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px;
+      line-height: 1;
+    }
+    .dict-bubble .close-btn:hover { color: #fff; }
+
+    .dict-word {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: var(--accent);
+      text-transform: capitalize;
+    }
+    .dict-def {
+      margin-bottom: 12px;
+      line-height: 1.4;
+      max-height: 150px;
+      overflow-y: auto;
+      color: var(--muted);
+    }
+    .dict-link {
+      display: inline-block;
+      font-size: 12px;
+      color: var(--accent2);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .dict-link:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -652,6 +726,14 @@
           <div>3) Decide: <b>best roommate</b>.</div>
           <div>4) Open <b>Verdict</b> and write.</div>
           <span class="question">Discussion: <b>What is your “must-have” rule?</b></span>
+          
+          <!-- DICTIONARY TOGGLE -->
+          <div style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.1);">
+            <div class="checkbox" style="font-size:13px; color:var(--accent);">
+              <input id="toggleDict" type="checkbox" checked />
+              <label for="toggleDict"><b>Dictionary Mode</b><br><span style="color:var(--muted); font-weight:400;">Double-click words to define</span></label>
+            </div>
+          </div>
         </div>
       </aside>
 
@@ -700,6 +782,12 @@
         <div class="hero">
           <div class="photo" id="photoBox">
             <img id="profilePhoto" src="" alt="Profile photo" />
+            <!-- Error message container -->
+            <div id="imgError" class="img-error-msg">
+              <b>Image Error</b>
+              <span id="imgErrorPath"></span>
+              <div style="margin-top:6px; opacity:0.7;">Check capitalization! (nina.jpg vs Nina.jpg)</div>
+            </div>
           </div>
 
           <div class="bio">
@@ -811,6 +899,12 @@
       </main>
 
     </div>
+  </div>
+
+  <!-- POPUP DICTIONARY BUBBLE -->
+  <div id="dictBubble" class="dict-bubble" role="dialog" aria-label="Dictionary definition">
+    <button class="close-btn" id="closeDict" aria-label="Close dictionary">✕</button>
+    <div id="dictContent">Loading...</div>
   </div>
 
   <script>
@@ -939,7 +1033,9 @@
         cmpMoney: document.getElementById('cmpMoney'),
         cmpBestFor: document.getElementById('cmpBestFor'),
         toggleCompare: document.getElementById('toggleCompare'),
-        profilePhoto: document.getElementById('profilePhoto')
+        profilePhoto: document.getElementById('profilePhoto'),
+        imgError: document.getElementById('imgError'), // New element
+        imgErrorPath: document.getElementById('imgErrorPath') // New element
       };
 
       // Verdict elements (RENAMED from 'v' to 'verdictUI')
@@ -979,8 +1075,19 @@
         renderList(elements.badList, c.bad);
         elements.quoteText.textContent = c.quote;
 
+        // RESET IMAGE STATE
+        elements.imgError.style.display = 'none';
+        elements.profilePhoto.style.display = 'block';
+
         elements.profilePhoto.src = c.photo;
         elements.profilePhoto.alt = c.nameAge + " profile photo";
+        
+        // ADD ERROR HANDLER
+        elements.profilePhoto.onerror = function() {
+          this.style.display = 'none';
+          elements.imgError.style.display = 'flex';
+          elements.imgErrorPath.textContent = "Looking for: " + c.photo;
+        };
 
         elements.cmpNoise.textContent = c.compare.noise;
         elements.cmpClean.textContent = c.compare.clean;
@@ -1274,6 +1381,136 @@
       setCandidate('A');
       updateVerdictPreview('A');
       updateWordCount();
+
+      // --- NEW DICTIONARY BUBBLE LOGIC ---
+      const dictToggle = document.getElementById('toggleDict');
+      const dictBubble = document.getElementById('dictBubble');
+      const dictContent = document.getElementById('dictContent');
+      const closeDict = document.getElementById('closeDict');
+
+      function hideBubble() {
+        dictBubble.style.display = 'none';
+      }
+
+      closeDict.addEventListener('click', hideBubble);
+
+      // Close when clicking outside the bubble
+      document.addEventListener('click', (e) => {
+        if (dictBubble.style.display === 'block' && !dictBubble.contains(e.target)) {
+          hideBubble();
+        }
+      });
+
+      document.addEventListener('dblclick', async function(e) {
+        // 1. Check if feature is enabled
+        if (!dictToggle || !dictToggle.checked) return;
+
+        // 2. Ignore if clicking inside a form input or textarea or button
+        if (['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].includes(e.target.tagName)) return;
+
+        // 3. Get the selected text
+        const selection = window.getSelection();
+        const text = selection.toString().trim();
+
+        // 4. Validate word (no spaces, length > 1)
+        if (text && text.length > 1 && text.indexOf(' ') === -1) {
+          
+          // --- POSITIONING ---
+          const range = selection.getRangeAt(0);
+          const rect = range.getBoundingClientRect();
+          
+          // Show bubble to calculate dimensions
+          dictBubble.style.display = 'block';
+          
+          // Initial content
+          dictContent.innerHTML = `<div style="padding:10px; text-align:center;">Loading definition...</div>`;
+
+          // Calculate Left
+          const bubbleWidth = 280; 
+          let left = rect.left + (rect.width / 2) - (bubbleWidth / 2);
+          
+          // Boundary checks (screen edges)
+          if (left < 10) left = 10;
+          if (left + bubbleWidth > window.innerWidth) left = window.innerWidth - bubbleWidth - 10;
+          
+          dictBubble.style.left = left + 'px';
+
+          // Calculate Top (Try above first, else below)
+          const bubbleHeight = dictBubble.offsetHeight; // approx 150-200px
+          if (rect.top - 200 < 0) {
+             // Not enough space above, show below
+             dictBubble.style.top = (rect.bottom + 10) + 'px';
+          } else {
+             // Show above
+             // We'll adjust exact height after content loads, but for now set a safe top
+             dictBubble.style.top = (rect.top - 100) + 'px'; 
+          }
+
+          // --- FETCH DATA ---
+          try {
+            // Free Dictionary API
+            const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${text}`);
+            
+            if (!res.ok) throw new Error("API Error");
+            
+            const data = await res.json();
+
+            if (Array.isArray(data) && data.length > 0) {
+               const entry = data[0];
+               // Get first definition
+               const def = entry.meanings[0]?.definitions[0]?.definition || "No simple definition found.";
+               const phonetics = entry.phonetic || "";
+               
+               dictContent.innerHTML = `
+                 <div class="dict-word">${text} <span style="font-size:12px; color:var(--muted); font-weight:400;">${phonetics}</span></div>
+                 <div class="dict-def">${def}</div>
+                 <a href="https://www.wordreference.com/definition/${text}" target="_blank" class="dict-link">See full details on WordReference →</a>
+               `;
+            } else {
+               throw new Error("No definition found");
+            }
+          } catch(err) {
+            dictContent.innerHTML = `
+              <div class="dict-word">${text}</div>
+              <div class="dict-def">Could not load definition automatically.</div>
+              <a href="https://www.wordreference.com/definition/${text}" target="_blank" class="dict-link">Check WordReference →</a>
+            `;
+          }
+
+          // Re-calculate Top position now that content is loaded and height is real
+          const finalHeight = dictBubble.offsetHeight;
+          if (rect.top - finalHeight - 15 < 0) {
+            dictBubble.style.top = (rect.bottom + 10) + 'px';
+          } else {
+            dictBubble.style.top = (rect.top - finalHeight - 15) + 'px';
+          }
+        }
+      });
+
+      // --- RESTRICT COPY / PASTE ---
+      
+      // 1. Prevent Pasting into the Verdict box (Forces students to type)
+      verdictUI.text.addEventListener('paste', function(e) {
+        e.preventDefault();
+        alert("Pasting is disabled for this activity. Please type your answer manually.");
+      });
+
+      // 2. Prevent Copying from the website (Prevents copying bio info)
+      // Note: We leave 'selection' enabled so the Dictionary double-click feature still works.
+      document.addEventListener('copy', function(e) {
+        // Check if the user is trying to copy from the verdict text box (we might want to allow them to copy their own work)
+        if (e.target !== verdictUI.text) {
+          e.preventDefault();
+          // Optional: You can alert, but often silent failure is less annoying for accidental Ctrl+C
+          // alert("Copying text from the cards is disabled.");
+        }
+      });
+      
+      // 3. Prevent Drag & Drop text (another way to copy-paste)
+      verdictUI.text.addEventListener('drop', function(e) {
+        e.preventDefault();
+      });
+
     })();
   </script>
 </body>
