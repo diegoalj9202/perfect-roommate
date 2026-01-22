@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Perfect Roommate — Candidate Profile Cards (B1)</title>
+  <title>The Perfect Roommate — B1</title>
   <style>
     :root{
       --bg:#0b1220;
@@ -100,7 +100,7 @@
       text-transform:uppercase;
     }
 
-    .candidate-btn{
+    .tab-btn{
       width:100%;
       text-align:left;
       border:1px solid var(--line);
@@ -115,8 +115,8 @@
       transition: transform .08s ease, background .15s ease, border-color .15s ease;
       margin-bottom:10px;
     }
-    .candidate-btn:hover{transform: translateY(-1px); background:rgba(255,255,255,.07)}
-    .candidate-btn[aria-selected="true"]{
+    .tab-btn:hover{transform: translateY(-1px); background:rgba(255,255,255,.07)}
+    .tab-btn[aria-selected="true"]{
       border-color: rgba(125,211,252,.6);
       background: linear-gradient(90deg, rgba(125,211,252,.20), rgba(167,139,250,.10));
     }
@@ -133,6 +133,7 @@
       border:1px solid rgba(255,255,255,.18);
       flex:0 0 auto;
     }
+    .badge.home{background: rgba(251,191,36,.18); color:#fff7d6;}
     .badge.a{background: rgba(125,211,252,.22); color:#dff6ff;}
     .badge.b{background: rgba(167,139,250,.22); color:#f1eaff;}
     .badge.c{background: rgba(134,239,172,.18); color:#eafff1;}
@@ -176,7 +177,6 @@
       flex-wrap:wrap;
     }
 
-    /* PHOTO BOX (image only, no text overlay) */
     .photo{
       width:180px;
       height:180px;
@@ -186,6 +186,7 @@
       position:relative;
       overflow:hidden;
       padding:0;
+      flex:0 0 auto;
     }
     .photo img{
       width:100%;
@@ -361,6 +362,53 @@
       background: rgba(255,255,255,.05);
       color:var(--text);
     }
+
+    /* Tabs (Home vs Candidates) */
+    .panel{ display:none; }
+    .panel.active{ display:block; }
+
+    .scenario h2{
+      margin:0 0 10px;
+      font-size:24px;
+    }
+    .scenario .headline{
+      font-size:22px;
+      font-weight:800;
+      margin:0 0 12px;
+      letter-spacing:.2px;
+    }
+    .scenario .box{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.10);
+      border-radius:16px;
+      padding:12px;
+      margin-top:12px;
+    }
+    .scenario .box h3{
+      margin:0 0 8px;
+      font-size:14px;
+      text-transform:uppercase;
+      letter-spacing:.25px;
+      color:var(--muted);
+    }
+    .scenario p{margin:0; color:var(--text); line-height:1.45;}
+    .scenario .rule{
+      border-left:4px solid rgba(252,165,165,.9);
+      padding-left:10px;
+    }
+    .scenario .start{
+      margin-top:14px;
+    }
+    .start button{
+      border:1px solid rgba(125,211,252,.6);
+      background: linear-gradient(90deg, rgba(125,211,252,.22), rgba(167,139,250,.12));
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:700;
+    }
+    .start button:hover{background:rgba(255,255,255,.07)}
   </style>
 </head>
 <body>
@@ -368,7 +416,7 @@
     <header>
       <div>
         <h1>The Perfect Roommate</h1>
-        <p class="subtitle">Explore the candidate profile cards. Then compare them and argue who is the best roommate for <b>you</b> (or for a situation your teacher gives you).</p>
+        <p class="subtitle">Read the scenario first. Then explore the candidate profile cards and argue who is the best roommate for <b>you</b> (or for a situation your teacher gives you).</p>
       </div>
       <div class="teacher-note">
         <b>Teacher tip:</b> Think about the things you consider are on favor of the candidate you choose. You must be ready to convince others using <b>reasons</b> and <b>examples</b>.
@@ -377,10 +425,20 @@
     </header>
 
     <div class="layout">
-      <aside class="nav" aria-label="Candidate navigation">
-        <h2>Choose a candidate</h2>
+      <aside class="nav" aria-label="Navigation">
+        <h2>Navigate</h2>
 
-        <button class="candidate-btn" data-id="A" aria-selected="true">
+        <!-- HOME TAB -->
+        <button class="tab-btn" data-tab="home" aria-selected="true">
+          <div class="badge home">🏠</div>
+          <div class="btn-text">
+            <div class="name">Home (Scenario)</div>
+            <div class="tag">Read the context first</div>
+          </div>
+        </button>
+
+        <!-- CANDIDATE TABS -->
+        <button class="tab-btn" data-tab="A" aria-selected="false">
           <div class="badge a">A</div>
           <div class="btn-text">
             <div class="name" id="navNameA">Nina Torres (28)</div>
@@ -388,7 +446,7 @@
           </div>
         </button>
 
-        <button class="candidate-btn" data-id="B" aria-selected="false">
+        <button class="tab-btn" data-tab="B" aria-selected="false">
           <div class="badge b">B</div>
           <div class="btn-text">
             <div class="name" id="navNameB">Daniel Park (32)</div>
@@ -396,7 +454,7 @@
           </div>
         </button>
 
-        <button class="candidate-btn" data-id="C" aria-selected="false">
+        <button class="tab-btn" data-tab="C" aria-selected="false">
           <div class="badge c">C</div>
           <div class="btn-text">
             <div class="name" id="navNameC">Leo Ramirez (26)</div>
@@ -406,15 +464,56 @@
 
         <div class="help">
           <div><b>How to use:</b></div>
-          <div>1) Click A, B, or C.</div>
-          <div>2) Read the good and bad habits.</div>
-          <div>3) Decide: <b>best roommate</b> for you?</div>
+          <div>1) Read <b>Home (Scenario)</b>.</div>
+          <div>2) Click A, B, or C.</div>
+          <div>3) Decide: <b>best roommate</b> for your home.</div>
           <span class="question">Discussion question: <b>What is your “must-have” rule</b> for a roommate?</span>
           <div class="note">Tip: Use <span class="kbd">Tab</span> and <span class="kbd">Enter</span> to navigate with the keyboard.</div>
         </div>
       </aside>
 
-      <main class="card" aria-live="polite">
+      <!-- HOME PANEL -->
+      <main class="card panel active scenario" id="panel-home" aria-live="polite">
+        <div class="headline">🌞 Cozy Apartment Near the Metro needs 1 new roommate!</div>
+
+        <div class="box">
+          <h3>The Apartment</h3>
+          <p>
+            It’s a <b>small but bright</b> 3-bedroom apartment, 7 minutes from the metro. The best parts are a <b>nice balcony</b>
+            and <b>cheap rent</b> for this area. The problem is that the building has <b>very thin walls</b>, so neighbors complain
+            when there is noise at night.
+          </p>
+        </div>
+
+        <div class="box">
+          <h3>The “Current Roommates” (You!)</h3>
+          <p>
+            You are the <b>House Committee</b>. Right now, the apartment has two adults who work early mornings and one part-time student.
+            You like a <b>calm home</b>: you usually study, cook simple dinners, and sleep before 11 p.m. You don’t mind friendly people,
+            but you don’t want a home that feels like a party every day.
+          </p>
+        </div>
+
+        <div class="box rule">
+          <h3>The Deal Breaker Rule</h3>
+          <p>
+            <b>No pets allowed.</b> The landlord is strict, and the neighbors are nervous about animals in the building.
+          </p>
+        </div>
+
+        <div class="box">
+          <h3>Your Task</h3>
+          <p>
+            Read the three candidates. Then choose the best new roommate for this apartment. Give <b>3 reasons</b> and <b>1 warning</b>.
+          </p>
+          <div class="start">
+            <button id="goCandidates">Start: View Candidates</button>
+          </div>
+        </div>
+      </main>
+
+      <!-- CANDIDATE PANEL -->
+      <main class="card panel" id="panel-candidates" aria-live="polite">
         <div class="hero">
           <div class="photo" id="photoBox">
             <img id="profilePhoto" src="" alt="Profile photo" />
@@ -552,6 +651,11 @@
       }
     };
 
+    // Panels
+    const homePanel = document.getElementById('panel-home');
+    const candidatesPanel = document.getElementById('panel-candidates');
+
+    // Candidate elements
     const elements = {
       nameAge: document.getElementById('nameAge'),
       jobTitle: document.getElementById('jobTitle'),
@@ -588,7 +692,7 @@
       renderList(elements.badList, c.bad);
       elements.quoteText.textContent = c.quote;
 
-      // photo (always update)
+      // photo
       const img = document.getElementById('profilePhoto');
       img.src = c.photo;
       img.alt = c.nameAge + " profile photo";
@@ -600,22 +704,60 @@
       elements.cmpMoney.textContent = c.compare.money;
       elements.cmpBestFor.textContent = c.compare.bestFor;
 
-      // update selected button
-      document.querySelectorAll('.candidate-btn').forEach(btn => {
-        btn.setAttribute('aria-selected', btn.dataset.id === id ? 'true' : 'false');
-      });
+      // reset compare visibility when switching candidates (optional)
+      elements.toggleCompare.checked = false;
+      elements.compareBox.style.display = 'none';
     }
 
-    document.querySelectorAll('.candidate-btn').forEach(btn => {
-      btn.addEventListener('click', () => setCandidate(btn.dataset.id));
+    function showHome(){
+      homePanel.classList.add('active');
+      candidatesPanel.classList.remove('active');
+    }
+
+    function showCandidates(){
+      homePanel.classList.remove('active');
+      candidatesPanel.classList.add('active');
+      setCandidate('A');
+    }
+
+    // Navigation buttons (Home + A/B/C)
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+
+        // update selected state
+        document.querySelectorAll('.tab-btn').forEach(b => b.setAttribute('aria-selected', 'false'));
+        btn.setAttribute('aria-selected', 'true');
+
+        if (tab === 'home'){
+          showHome();
+        } else {
+          showCandidates();
+          setCandidate(tab);
+        }
+      });
     });
 
+    // Checkbox toggle
     elements.toggleCompare.addEventListener('change', (e) => {
       elements.compareBox.style.display = e.target.checked ? 'block' : 'none';
+      if (e.target.checked) {
+        elements.compareBox.scrollIntoView({ behavior: 'smooth' });
+      }
     });
 
-    // Initial render
-    setCandidate('A');
+    // Start button
+    document.getElementById('goCandidates').addEventListener('click', () => {
+      // Select Candidate A tab visually
+      const firstCandidateBtn = document.querySelector('.tab-btn[data-tab="A"]');
+      document.querySelectorAll('.tab-btn').forEach(b => b.setAttribute('aria-selected', 'false'));
+      firstCandidateBtn.setAttribute('aria-selected', 'true');
+
+      showCandidates();
+    });
+
+    // Initial view
+    showHome();
   </script>
 </body>
 </html>
