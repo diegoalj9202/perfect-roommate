@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>The Perfect Roommate — B1</title>
   <style>
     :root{
@@ -32,6 +32,11 @@
       align-items:center;
       justify-content:center;
       padding:28px;
+    }
+    
+    /* Mobile padding adjustment */
+    @media (max-width: 600px) {
+      body { padding: 16px; align-items: flex-start; }
     }
 
     .app{ width:min(1100px, 100%); }
@@ -73,13 +78,52 @@
 
     .layout{
       display:grid;
-      grid-template-columns: 320px 1fr;
+      grid-template-columns: 280px 1fr;
       gap:16px;
       align-items:start;
     }
 
+    /* Mobile Layout Stack */
     @media (max-width: 900px){
-      .layout{grid-template-columns: 1fr;}
+      .layout{ grid-template-columns: 1fr; gap: 24px; }
+      
+      /* Make nav stick to top on mobile for easy access */
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(16, 26, 51, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--line);
+        margin: -16px -16px 0 -16px; /* Negative margin to span full width */
+        border-radius: 0 0 16px 16px;
+        padding: 12px;
+      }
+      
+      .nav h2, .nav .help { display: none; } /* Hide extra text in mobile nav */
+      
+      .nav-buttons {
+        display: flex;
+        overflow-x: auto;
+        gap: 8px;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      .tab-btn {
+        flex: 0 0 auto;
+        width: auto;
+        min-width: 60px;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        padding: 8px 12px;
+        margin-bottom: 0;
+      }
+      
+      .btn-text .name { font-size: 11px; white-space: nowrap; }
+      .btn-text .tag { display: none; }
+      .badge { margin-bottom: 4px; width: 28px; height: 28px; font-size: 14px; }
     }
 
     .nav{
@@ -189,6 +233,12 @@
       padding:0;
       flex:0 0 auto;
     }
+    
+    @media (max-width: 500px) {
+       .photo { width: 100px; height: 100px; }
+       .hero { flex-wrap: nowrap; }
+    }
+
     .photo img{
       width:100%;
       height:100%;
@@ -197,8 +247,8 @@
     }
 
     .bio{
-      flex:1 1 320px;
-      min-width:260px;
+      flex:1 1 200px;
+      min-width:0; /* fix flex overflow */
     }
 
     .topline{
@@ -552,55 +602,56 @@
     <div class="layout">
       <aside class="nav" aria-label="Navigation">
         <h2>Navigate</h2>
+        
+        <div class="nav-buttons">
+          <button class="tab-btn" data-tab="home" aria-selected="true">
+            <div class="badge home">🏠</div>
+            <div class="btn-text">
+              <div class="name">Home</div>
+              <div class="tag">Scenario</div>
+            </div>
+          </button>
 
-        <button class="tab-btn" data-tab="home" aria-selected="true">
-          <div class="badge home">🏠</div>
-          <div class="btn-text">
-            <div class="name">Home (Scenario)</div>
-            <div class="tag">Read the context first</div>
-          </div>
-        </button>
+          <button class="tab-btn" data-tab="A" aria-selected="false">
+            <div class="badge a">A</div>
+            <div class="btn-text">
+              <div class="name">Nina</div>
+              <div class="tag">The Friendly</div>
+            </div>
+          </button>
 
-        <button class="tab-btn" data-tab="A" aria-selected="false">
-          <div class="badge a">A</div>
-          <div class="btn-text">
-            <div class="name" id="navNameA">Nina Torres (28)</div>
-            <div class="tag" id="navTagA">The Friendly Hurricane</div>
-          </div>
-        </button>
+          <button class="tab-btn" data-tab="B" aria-selected="false">
+            <div class="badge b">B</div>
+            <div class="btn-text">
+              <div class="name">Daniel</div>
+              <div class="tag">The Quiet</div>
+            </div>
+          </button>
 
-        <button class="tab-btn" data-tab="B" aria-selected="false">
-          <div class="badge b">B</div>
-          <div class="btn-text">
-            <div class="name" id="navNameB">Daniel Park (32)</div>
-            <div class="tag" id="navTagB">The Quiet Controller</div>
-          </div>
-        </button>
+          <button class="tab-btn" data-tab="C" aria-selected="false">
+            <div class="badge c">C</div>
+            <div class="btn-text">
+              <div class="name">Leo</div>
+              <div class="tag">The Chill</div>
+            </div>
+          </button>
 
-        <button class="tab-btn" data-tab="C" aria-selected="false">
-          <div class="badge c">C</div>
-          <div class="btn-text">
-            <div class="name" id="navNameC">Leo Ramirez (26)</div>
-            <div class="tag" id="navTagC">The Chill Drifter</div>
-          </div>
-        </button>
-
-        <button class="tab-btn" data-tab="verdict" aria-selected="false">
-          <div class="badge v">📝</div>
-          <div class="btn-text">
-            <div class="name">Final Verdict</div>
-            <div class="tag">Write & download</div>
-          </div>
-        </button>
+          <button class="tab-btn" data-tab="verdict" aria-selected="false">
+            <div class="badge v">📝</div>
+            <div class="btn-text">
+              <div class="name">Verdict</div>
+              <div class="tag">Write</div>
+            </div>
+          </button>
+        </div>
 
         <div class="help">
           <div><b>How to use:</b></div>
-          <div>1) Read <b>Home (Scenario)</b>.</div>
+          <div>1) Read <b>Home</b>.</div>
           <div>2) Click A, B, or C.</div>
-          <div>3) Decide: <b>best roommate</b> for your home.</div>
-          <div>4) Open <b>Final Verdict</b> and write your decision.</div>
-          <span class="question">Discussion question: <b>What is your “must-have” rule</b> for a roommate?</span>
-          <div class="note">Tip: Use <span class="kbd">Tab</span> and <span class="kbd">Enter</span> to navigate with the keyboard.</div>
+          <div>3) Decide: <b>best roommate</b>.</div>
+          <div>4) Open <b>Verdict</b> and write.</div>
+          <span class="question">Discussion: <b>What is your “must-have” rule?</b></span>
         </div>
       </aside>
 
@@ -636,7 +687,7 @@
         <div class="box">
           <h3>Your Task</h3>
           <p>
-            Read the three candidates. Then choose the best new roommate for this apartment. Give <b>3 reasons</b> and <b>1 warning</b>.
+            Read the three candidates. Then choose the best roommate for this apartment. Give <b>3 reasons</b> and <b>1 warning</b>.
           </p>
           <div class="start">
             <button id="goCandidates">Start: View Candidates</button>
@@ -781,446 +832,449 @@
       };
     }
 
-    const candidates = {
-      A: {
-        id: "A",
-        nameAge: "Nina Torres (28)",
-        jobTitle: "Event assistant",
-        tagline: "The Friendly Hurricane",
-        styleHint: "Social • Loud • Generous",
-        good: [
-          "Pays rent on time and offers to help with bills.",
-          "Loves to cook and shares food with everyone.",
-          "Friendly and welcoming; knows many neighbors."
-        ],
-        bad: [
-          "Leaves clothes and bags on the floor.",
-          "Plays music and talks on the phone late at night.",
-          "Invites friends over without warning."
-        ],
-        quote: "Don’t worry, I’ll share my food—let’s make this place feel like home!",
-        photo: "images/nina.jpg",
-        compare: {
-          noise: "Very loud",
-          clean: "Very messy",
-          visitors: "Many friends visit often",
-          money: "Pays on time",
-          bestFor: "Someone who likes a busy home"
+    (function() {
+      // Data
+      const candidates = {
+        A: {
+          id: "A",
+          nameAge: "Nina Torres (28)",
+          jobTitle: "Event assistant",
+          tagline: "The Friendly Hurricane",
+          styleHint: "Social • Loud • Generous",
+          good: [
+            "Pays rent on time and offers to help with bills.",
+            "Loves to cook and shares food with everyone.",
+            "Friendly and welcoming; knows many neighbors."
+          ],
+          bad: [
+            "Leaves clothes and bags on the floor.",
+            "Plays music and talks on the phone late at night.",
+            "Invites friends over without warning."
+          ],
+          quote: "Don’t worry, I’ll share my food—let’s make this place feel like home!",
+          photo: "PerfectRoommate/images/nina.jpg",
+          compare: {
+            noise: "Very loud",
+            clean: "Very messy",
+            visitors: "Many friends visit often",
+            money: "Pays on time",
+            bestFor: "Someone who likes a busy home"
+          }
+        },
+        B: {
+          id: "B",
+          nameAge: "Daniel Park (32)",
+          jobTitle: "Accountant",
+          tagline: "The Quiet Controller",
+          styleHint: "Organized • Serious • Quiet",
+          good: [
+            "Keeps the kitchen and bathroom very clean.",
+            "Plans shopping and pays bills early.",
+            "Respects sleep; always quiet at night."
+          ],
+          bad: [
+            "Hates visitors and says “no guests” most of the time.",
+            "Has strict rules about shoes, noise, and cleaning.",
+            "Can be cold and not very friendly."
+          ],
+          quote: "I like peace and order. Please follow the house rules.",
+          photo: "PerfectRoommate/images/daniel.jpg",
+          compare: {
+            noise: "Very quiet",
+            clean: "Very clean",
+            visitors: "Almost no visitors",
+            money: "Very careful with money",
+            bestFor: "Someone who needs calm and structure"
+          }
+        },
+        C: {
+          id: "C",
+          nameAge: "Leo Ramirez (26)",
+          jobTitle: "Between jobs (freelance sometimes)",
+          tagline: "The Chill Drifter",
+          styleHint: "Relaxed • Easygoing • Unreliable",
+          good: [
+            "Very calm and rarely gets angry.",
+            "Easy to live with; does not complain much.",
+            "Likes simple routines and a quiet evening."
+          ],
+          bad: [
+            "Doesn’t have a stable job, so money is a problem.",
+            "Often forgets due dates and pays late.",
+            "Has a pet tarantula in a glass box (and talks to it)."
+          ],
+          quote: "It’ll work out… relax. Also, don’t worry—Spider is friendly.",
+          photo: "PerfectRoommate/images/leo.jpg",
+          compare: {
+            noise: "Quiet to medium",
+            clean: "Okay, but not perfect",
+            visitors: "Few visitors",
+            money: "Unreliable payments",
+            bestFor: "Someone who accepts risks and wants a relaxed home"
+          }
         }
-      },
-      B: {
-        id: "B",
-        nameAge: "Daniel Park (32)",
-        jobTitle: "Accountant",
-        tagline: "The Quiet Controller",
-        styleHint: "Organized • Serious • Quiet",
-        good: [
-          "Keeps the kitchen and bathroom very clean.",
-          "Plans shopping and pays bills early.",
-          "Respects sleep; always quiet at night."
-        ],
-        bad: [
-          "Hates visitors and says “no guests” most of the time.",
-          "Has strict rules about shoes, noise, and cleaning.",
-          "Can be cold and not very friendly."
-        ],
-        quote: "I like peace and order. Please follow the house rules.",
-        photo: "images/daniel.jpg",
-        compare: {
-          noise: "Very quiet",
-          clean: "Very clean",
-          visitors: "Almost no visitors",
-          money: "Very careful with money",
-          bestFor: "Someone who needs calm and structure"
-        }
-      },
-      C: {
-        id: "C",
-        nameAge: "Leo Ramirez (26)",
-        jobTitle: "Between jobs (freelance sometimes)",
-        tagline: "The Chill Drifter",
-        styleHint: "Relaxed • Easygoing • Unreliable",
-        good: [
-          "Very calm and rarely gets angry.",
-          "Easy to live with; does not complain much.",
-          "Likes simple routines and a quiet evening."
-        ],
-        bad: [
-          "Doesn’t have a stable job, so money is a problem.",
-          "Often forgets due dates and pays late.",
-          "Has a pet tarantula in a glass box (and talks to it)."
-        ],
-        quote: "It’ll work out… relax. Also, don’t worry—Spider is friendly.",
-        photo: "images/leo.jpg",
-        compare: {
-          noise: "Quiet to medium",
-          clean: "Okay, but not perfect",
-          visitors: "Few visitors",
-          money: "Unreliable payments",
-          bestFor: "Someone who accepts risks and wants a relaxed home"
+      };
+
+      // Panels
+      const homePanel = document.getElementById('panel-home');
+      const candidatesPanel = document.getElementById('panel-candidates');
+      const verdictPanel = document.getElementById('panel-verdict');
+
+      // Track last viewed candidate
+      let lastViewedCandidateId = "A";
+
+      // Candidate elements
+      const elements = {
+        nameAge: document.getElementById('nameAge'),
+        jobTitle: document.getElementById('jobTitle'),
+        tagline: document.getElementById('tagline'),
+        styleHint: document.getElementById('styleHint'),
+        goodList: document.getElementById('goodList'),
+        badList: document.getElementById('badList'),
+        quoteText: document.getElementById('quoteText'),
+        compareBox: document.getElementById('compareBox'),
+        cmpNoise: document.getElementById('cmpNoise'),
+        cmpClean: document.getElementById('cmpClean'),
+        cmpVisitors: document.getElementById('cmpVisitors'),
+        cmpMoney: document.getElementById('cmpMoney'),
+        cmpBestFor: document.getElementById('cmpBestFor'),
+        toggleCompare: document.getElementById('toggleCompare'),
+        profilePhoto: document.getElementById('profilePhoto')
+      };
+
+      // Verdict elements (RENAMED from 'v' to 'verdictUI')
+      const verdictUI = {
+        select: document.getElementById('verdictSelect'),
+        photo: document.getElementById('verdictPhoto'),
+        name: document.getElementById('verdictName'),
+        tag: document.getElementById('verdictTag'),
+        text: document.getElementById('verdictText'),
+        wc: document.getElementById('wordCount'),
+        tip: document.getElementById('wordTip'),
+        downloadBtn: document.getElementById('downloadVerdictBtn'),
+        clearBtn: document.getElementById('clearVerdictBtn'),
+        useCurrentBtn: document.getElementById('useCurrentBtn'),
+        previewBox: document.getElementById('downloadPreview'),
+        previewImg: document.getElementById('downloadPreviewImg')
+      };
+
+      function renderList(ul, items){
+        ul.innerHTML = '';
+        for(const text of items){
+          const li = document.createElement('li');
+          li.textContent = text;
+          ul.appendChild(li);
         }
       }
-    };
 
-    // Panels
-    const homePanel = document.getElementById('panel-home');
-    const candidatesPanel = document.getElementById('panel-candidates');
-    const verdictPanel = document.getElementById('panel-verdict');
+      function setCandidate(id){
+        const c = candidates[id];
+        lastViewedCandidateId = id;
 
-    // Track last viewed candidate
-    let lastViewedCandidateId = "A";
+        elements.nameAge.textContent = c.nameAge;
+        elements.jobTitle.textContent = c.jobTitle;
+        elements.tagline.innerHTML = '<span class="dot"></span> ' + c.tagline;
+        elements.styleHint.textContent = c.styleHint;
+        renderList(elements.goodList, c.good);
+        renderList(elements.badList, c.bad);
+        elements.quoteText.textContent = c.quote;
 
-    // Candidate elements
-    const elements = {
-      nameAge: document.getElementById('nameAge'),
-      jobTitle: document.getElementById('jobTitle'),
-      tagline: document.getElementById('tagline'),
-      styleHint: document.getElementById('styleHint'),
-      goodList: document.getElementById('goodList'),
-      badList: document.getElementById('badList'),
-      quoteText: document.getElementById('quoteText'),
-      compareBox: document.getElementById('compareBox'),
-      cmpNoise: document.getElementById('cmpNoise'),
-      cmpClean: document.getElementById('cmpClean'),
-      cmpVisitors: document.getElementById('cmpVisitors'),
-      cmpMoney: document.getElementById('cmpMoney'),
-      cmpBestFor: document.getElementById('cmpBestFor'),
-      toggleCompare: document.getElementById('toggleCompare'),
-      profilePhoto: document.getElementById('profilePhoto')
-    };
+        elements.profilePhoto.src = c.photo;
+        elements.profilePhoto.alt = c.nameAge + " profile photo";
 
-    // Verdict elements
-    const v = {
-      select: document.getElementById('verdictSelect'),
-      photo: document.getElementById('verdictPhoto'),
-      name: document.getElementById('verdictName'),
-      tag: document.getElementById('verdictTag'),
-      text: document.getElementById('verdictText'),
-      wc: document.getElementById('wordCount'),
-      tip: document.getElementById('wordTip'),
-      downloadBtn: document.getElementById('downloadVerdictBtn'),
-      clearBtn: document.getElementById('clearVerdictBtn'),
-      useCurrentBtn: document.getElementById('useCurrentBtn'),
-      previewBox: document.getElementById('downloadPreview'),
-      previewImg: document.getElementById('downloadPreviewImg')
-    };
+        elements.cmpNoise.textContent = c.compare.noise;
+        elements.cmpClean.textContent = c.compare.clean;
+        elements.cmpVisitors.textContent = c.compare.visitors;
+        elements.cmpMoney.textContent = c.compare.money;
+        elements.cmpBestFor.textContent = c.compare.bestFor;
 
-    function renderList(ul, items){
-      ul.innerHTML = '';
-      for(const text of items){
-        const li = document.createElement('li');
-        li.textContent = text;
-        ul.appendChild(li);
+        elements.toggleCompare.checked = false;
+        elements.compareBox.style.display = 'none';
       }
-    }
 
-    function setCandidate(id){
-      const c = candidates[id];
-      lastViewedCandidateId = id;
+      function showPanel(which){
+        homePanel.classList.remove('active');
+        candidatesPanel.classList.remove('active');
+        verdictPanel.classList.remove('active');
 
-      elements.nameAge.textContent = c.nameAge;
-      elements.jobTitle.textContent = c.jobTitle;
-      elements.tagline.innerHTML = '<span class="dot"></span> ' + c.tagline;
-      elements.styleHint.textContent = c.styleHint;
-      renderList(elements.goodList, c.good);
-      renderList(elements.badList, c.bad);
-      elements.quoteText.textContent = c.quote;
+        if(which === 'home') homePanel.classList.add('active');
+        if(which === 'candidates') candidatesPanel.classList.add('active');
+        if(which === 'verdict') verdictPanel.classList.add('active');
+      }
 
-      elements.profilePhoto.src = c.photo;
-      elements.profilePhoto.alt = c.nameAge + " profile photo";
+      function showHome(){ showPanel('home'); }
+      function showCandidates(){
+        showPanel('candidates');
+        setCandidate(lastViewedCandidateId || 'A');
+      }
+      function showVerdict(){
+        showPanel('verdict');
+        verdictUI.select.value = lastViewedCandidateId || 'A';
+        updateVerdictPreview(verdictUI.select.value);
+        updateWordCount();
+        verdictUI.previewBox.style.display = 'none';
+      }
 
-      elements.cmpNoise.textContent = c.compare.noise;
-      elements.cmpClean.textContent = c.compare.clean;
-      elements.cmpVisitors.textContent = c.compare.visitors;
-      elements.cmpMoney.textContent = c.compare.money;
-      elements.cmpBestFor.textContent = c.compare.bestFor;
+      // Navigation buttons
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tab = btn.dataset.tab;
 
-      elements.toggleCompare.checked = false;
-      elements.compareBox.style.display = 'none';
-    }
+          document.querySelectorAll('.tab-btn').forEach(b => b.setAttribute('aria-selected', 'false'));
+          btn.setAttribute('aria-selected', 'true');
 
-    function showPanel(which){
-      homePanel.classList.remove('active');
-      candidatesPanel.classList.remove('active');
-      verdictPanel.classList.remove('active');
+          if (tab === 'home'){
+            showHome();
+          } else if (tab === 'verdict'){
+            showVerdict();
+          } else {
+            showCandidates();
+            setCandidate(tab);
+          }
+        });
+      });
 
-      if(which === 'home') homePanel.classList.add('active');
-      if(which === 'candidates') candidatesPanel.classList.add('active');
-      if(which === 'verdict') verdictPanel.classList.add('active');
-    }
+      // Compare checkbox
+      elements.toggleCompare.addEventListener('change', (e) => {
+        elements.compareBox.style.display = e.target.checked ? 'block' : 'none';
+        if (e.target.checked) {
+          elements.compareBox.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
 
-    function showHome(){ showPanel('home'); }
-    function showCandidates(){
-      showPanel('candidates');
-      setCandidate(lastViewedCandidateId || 'A');
-    }
-    function showVerdict(){
-      showPanel('verdict');
-      v.select.value = lastViewedCandidateId || 'A';
-      updateVerdictPreview(v.select.value);
-      updateWordCount();
-      v.previewBox.style.display = 'none';
-    }
-
-    // Navigation buttons
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tab = btn.dataset.tab;
-
+      // Start button
+      document.getElementById('goCandidates').addEventListener('click', () => {
+        const firstCandidateBtn = document.querySelector('.tab-btn[data-tab="A"]');
         document.querySelectorAll('.tab-btn').forEach(b => b.setAttribute('aria-selected', 'false'));
-        btn.setAttribute('aria-selected', 'true');
-
-        if (tab === 'home'){
-          showHome();
-        } else if (tab === 'verdict'){
-          showVerdict();
-        } else {
-          showCandidates();
-          setCandidate(tab);
-        }
+        firstCandidateBtn.setAttribute('aria-selected', 'true');
+        showCandidates();
+        setCandidate('A');
       });
-    });
 
-    // Compare checkbox
-    elements.toggleCompare.addEventListener('change', (e) => {
-      elements.compareBox.style.display = e.target.checked ? 'block' : 'none';
-      if (e.target.checked) {
-        elements.compareBox.scrollIntoView({ behavior: 'smooth' });
+      // Verdict preview
+      function updateVerdictPreview(id){
+        const c = candidates[id];
+        verdictUI.photo.src = c.photo;
+        verdictUI.photo.alt = c.nameAge + " photo";
+        verdictUI.name.textContent = c.nameAge;
+        verdictUI.tag.textContent = c.tagline;
       }
-    });
 
-    // Start button
-    document.getElementById('goCandidates').addEventListener('click', () => {
-      const firstCandidateBtn = document.querySelector('.tab-btn[data-tab="A"]');
-      document.querySelectorAll('.tab-btn').forEach(b => b.setAttribute('aria-selected', 'false'));
-      firstCandidateBtn.setAttribute('aria-selected', 'true');
-      showCandidates();
-      setCandidate('A');
-    });
+      verdictUI.select.addEventListener('change', () => updateVerdictPreview(verdictUI.select.value));
 
-    // Verdict preview
-    function updateVerdictPreview(id){
-      const c = candidates[id];
-      v.photo.src = c.photo;
-      v.photo.alt = c.nameAge + " photo";
-      v.name.textContent = c.nameAge;
-      v.tag.textContent = c.tagline;
-    }
-
-    v.select.addEventListener('change', () => updateVerdictPreview(v.select.value));
-
-    v.useCurrentBtn.addEventListener('click', () => {
-      v.select.value = lastViewedCandidateId || 'A';
-      updateVerdictPreview(v.select.value);
-    });
-
-    // Word counter
-    function countWords(text){
-      const cleaned = (text || "")
-        .replace(/[\n\r\t]/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
-      if(!cleaned) return 0;
-      return cleaned.split(" ").filter(Boolean).length;
-    }
-
-    function updateWordCount(){
-      const wc = countWords(v.text.value);
-      v.wc.textContent = wc;
-      if (wc < 60) v.tip.textContent = "Tip: Add more reasons and examples.";
-      else if (wc <= 100) v.tip.textContent = "Good length. 70–90 words is perfect.";
-      else v.tip.textContent = "Tip: Try to be shorter and clearer.";
-    }
-
-    v.text.addEventListener('input', updateWordCount);
-
-    v.clearBtn.addEventListener('click', () => {
-      v.text.value = "";
-      updateWordCount();
-      v.text.focus();
-      v.previewBox.style.display = 'none';
-    });
-
-    // Helpers for image + wrapping
-    function loadImage(src){
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = () => resolve(null);
-        img.src = src;
+      verdictUI.useCurrentBtn.addEventListener('click', () => {
+        verdictUI.select.value = lastViewedCandidateId || 'A';
+        updateVerdictPreview(verdictUI.select.value);
       });
-    }
 
-    function wrapLines(ctx, text, maxWidth){
-      const words = (text || "").split(/\s+/).filter(Boolean);
-      const lines = [];
-      let line = "";
-      for (const w of words){
-        const test = line ? (line + " " + w) : w;
-        if (ctx.measureText(test).width <= maxWidth){
-          line = test;
-        } else {
-          if (line) lines.push(line);
-          line = w;
-        }
+      // Word counter
+      function countWords(text){
+        const cleaned = (text || "")
+          .replace(/[\n\r\t]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+        if(!cleaned) return 0;
+        return cleaned.split(" ").filter(Boolean).length;
       }
-      if (line) lines.push(line);
-      return lines;
-    }
 
-    // Download (robust)
-    v.downloadBtn.addEventListener('click', async () => {
-      const chosenId = v.select.value || 'A';
-      const c = candidates[chosenId];
-      const text = v.text.value.trim();
-      const wc = countWords(text);
+      function updateWordCount(){
+        const wc = countWords(verdictUI.text.value);
+        verdictUI.wc.textContent = wc;
+        if (wc < 60) verdictUI.tip.textContent = "Tip: Add more reasons and examples.";
+        else if (wc <= 100) verdictUI.tip.textContent = "Good length. 70–90 words is perfect.";
+        else verdictUI.tip.textContent = "Tip: Try to be shorter and clearer.";
+      }
 
-      // Build canvas
-      const W = 1200, H = 675;
-      const canvas = document.createElement('canvas');
-      canvas.width = W; canvas.height = H;
-      const ctx = canvas.getContext('2d');
+      verdictUI.text.addEventListener('input', updateWordCount);
 
-      // BG
-      const grad = ctx.createLinearGradient(0, 0, W, H);
-      grad.addColorStop(0, '#0b1220');
-      grad.addColorStop(1, '#101a33');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, W, H);
+      verdictUI.clearBtn.addEventListener('click', () => {
+        verdictUI.text.value = "";
+        updateWordCount();
+        verdictUI.text.focus();
+        verdictUI.previewBox.style.display = 'none';
+      });
 
-      // Card
-      const pad = 48;
-      const cardX = pad, cardY = pad, cardW = W - pad*2, cardH = H - pad*2;
-      ctx.fillStyle = 'rgba(255,255,255,0.04)';
-      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
-      ctx.lineWidth = 2;
-      ctx.roundRect(cardX, cardY, cardW, cardH, 26);
-      ctx.fill(); ctx.stroke();
+      // Helpers for image + wrapping
+      function loadImage(src){
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = () => resolve(null);
+          img.src = src;
+        });
+      }
 
-      // Title
-      ctx.fillStyle = '#eef2ff';
-      ctx.font = '800 34px system-ui, Segoe UI, Arial';
-      ctx.fillText('The Perfect Roommate — Final Verdict', cardX + 28, cardY + 64);
+      function wrapLines(ctx, text, maxWidth){
+        const words = (text || "").split(/\s+/).filter(Boolean);
+        const lines = [];
+        let line = "";
+        for (const w of words){
+          const test = line ? (line + " " + w) : w;
+          if (ctx.measureText(test).width <= maxWidth){
+            line = test;
+          } else {
+            if (line) lines.push(line);
+            line = w;
+          }
+        }
+        if (line) lines.push(line);
+        return lines;
+      }
 
-      // Photo
-      const imgSize = 132;
-      const imgX = cardX + 28;
-      const imgY = cardY + 92;
+      // Download (robust)
+      verdictUI.downloadBtn.addEventListener('click', async () => {
+        const chosenId = verdictUI.select.value || 'A';
+        const c = candidates[chosenId];
+        const text = verdictUI.text.value.trim();
+        const wc = countWords(text);
 
-      const img = await loadImage(c.photo);
-      if (img){
-        ctx.save();
-        ctx.roundRect(imgX, imgY, imgSize, imgSize, 22);
-        ctx.clip();
+        // Build canvas
+        const W = 1200, H = 675;
+        const canvas = document.createElement('canvas');
+        canvas.width = W; canvas.height = H;
+        const ctx = canvas.getContext('2d');
 
-        const scale = Math.max(imgSize / img.width, imgSize / img.height);
-        const dw = img.width * scale;
-        const dh = img.height * scale;
-        const dx = imgX + (imgSize - dw)/2;
-        const dy = imgY + (imgSize - dh)/2;
-        ctx.drawImage(img, dx, dy, dw, dh);
-        ctx.restore();
+        // BG
+        const grad = ctx.createLinearGradient(0, 0, W, H);
+        grad.addColorStop(0, '#0b1220');
+        grad.addColorStop(1, '#101a33');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
 
-        ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+        // Card
+        const pad = 48;
+        const cardX = pad, cardY = pad, cardW = W - pad*2, cardH = H - pad*2;
+        ctx.fillStyle = 'rgba(255,255,255,0.04)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.12)';
         ctx.lineWidth = 2;
-        ctx.roundRect(imgX, imgY, imgSize, imgSize, 22);
-        ctx.stroke();
-      } else {
-        ctx.fillStyle = 'rgba(0,0,0,0.20)';
-        ctx.roundRect(imgX, imgY, imgSize, imgSize, 22);
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.18)';
-        ctx.stroke();
-        ctx.fillStyle = '#c7cffc';
-        ctx.font = '700 14px system-ui, Segoe UI, Arial';
-        ctx.fillText('Photo not loaded', imgX + 16, imgY + 72);
-      }
+        ctx.roundRect(cardX, cardY, cardW, cardH, 26);
+        ctx.fill(); ctx.stroke();
 
-      // Name/tag
-      ctx.fillStyle = '#eef2ff';
-      ctx.font = '800 28px system-ui, Segoe UI, Arial';
-      ctx.fillText(c.nameAge, imgX + imgSize + 22, imgY + 42);
+        // Title
+        ctx.fillStyle = '#eef2ff';
+        ctx.font = '800 34px system-ui, Segoe UI, Arial';
+        ctx.fillText('The Perfect Roommate — Final Verdict', cardX + 28, cardY + 64);
 
-      ctx.fillStyle = '#c7cffc';
-      ctx.font = '700 18px system-ui, Segoe UI, Arial';
-      ctx.fillText(c.tagline, imgX + imgSize + 22, imgY + 74);
+        // Photo
+        const imgSize = 132;
+        const imgX = cardX + 28;
+        const imgY = cardY + 92;
 
-      ctx.fillStyle = 'rgba(255,255,255,0.75)';
-      ctx.font = '600 16px system-ui, Segoe UI, Arial';
-      ctx.fillText(`Justification (${wc} words)`, imgX + imgSize + 22, imgY + 106);
+        const img = await loadImage(c.photo);
+        if (img){
+          ctx.save();
+          ctx.roundRect(imgX, imgY, imgSize, imgSize, 22);
+          ctx.clip();
 
-      // Text box
-      const boxX = cardX + 28;
-      const boxY = imgY + imgSize + 24;
-      const boxW = cardW - 56;
-      const boxH = cardH - (boxY - cardY) - 28;
+          const scale = Math.max(imgSize / img.width, imgSize / img.height);
+          const dw = img.width * scale;
+          const dh = img.height * scale;
+          const dx = imgX + (imgSize - dw)/2;
+          const dy = imgY + (imgSize - dh)/2;
+          ctx.drawImage(img, dx, dy, dw, dh);
+          ctx.restore();
 
-      ctx.fillStyle = 'rgba(0,0,0,0.12)';
-      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
-      ctx.lineWidth = 2;
-      ctx.roundRect(boxX, boxY, boxW, boxH, 18);
-      ctx.fill(); ctx.stroke();
-
-      // Text
-      const textPad = 22;
-      const maxWidth = boxW - textPad*2;
-      ctx.fillStyle = '#eef2ff';
-      ctx.font = '500 20px system-ui, Segoe UI, Arial';
-      const content = text || "(No text written.)";
-      const lines = wrapLines(ctx, content, maxWidth);
-      const lineHeight = 30;
-      const maxLines = Math.floor((boxH - textPad*2) / lineHeight);
-      const shown = lines.slice(0, maxLines);
-
-      let y = boxY + textPad + 28;
-      for (const line of shown){
-        ctx.fillText(line, boxX + textPad, y);
-        y += lineHeight;
-      }
-      if (lines.length > maxLines){
-        ctx.fillStyle = 'rgba(255,255,255,0.65)';
-        ctx.font = '600 16px system-ui, Segoe UI, Arial';
-        ctx.fillText('…(text continues)', boxX + textPad, boxY + boxH - 18);
-      }
-
-      // Convert to Blob and download
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          // If blob fails, show preview
-          v.previewImg.src = canvas.toDataURL('image/png');
-          v.previewBox.style.display = 'block';
-          return;
+          ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+          ctx.lineWidth = 2;
+          ctx.roundRect(imgX, imgY, imgSize, imgSize, 22);
+          ctx.stroke();
+        } else {
+          ctx.fillStyle = 'rgba(0,0,0,0.20)';
+          ctx.roundRect(imgX, imgY, imgSize, imgSize, 22);
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+          ctx.stroke();
+          ctx.fillStyle = '#c7cffc';
+          ctx.font = '700 14px system-ui, Segoe UI, Arial';
+          ctx.fillText('Photo not loaded', imgX + 16, imgY + 72);
         }
 
-        const filename = `final_verdict_${chosenId}.png`;
-        const url = URL.createObjectURL(blob);
+        // Name/tag
+        ctx.fillStyle = '#eef2ff';
+        ctx.font = '800 28px system-ui, Segoe UI, Arial';
+        ctx.fillText(c.nameAge, imgX + imgSize + 22, imgY + 42);
 
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
+        ctx.fillStyle = '#c7cffc';
+        ctx.font = '700 18px system-ui, Segoe UI, Arial';
+        ctx.fillText(c.tagline, imgX + imgSize + 22, imgY + 74);
 
-        // Try download
-        a.click();
+        ctx.fillStyle = 'rgba(255,255,255,0.75)';
+        ctx.font = '600 16px system-ui, Segoe UI, Arial';
+        ctx.fillText(`Justification (${wc} words)`, imgX + imgSize + 22, imgY + 106);
 
-        // Cleanup
-        setTimeout(() => {
-          URL.revokeObjectURL(url);
-          document.body.removeChild(a);
-        }, 150);
+        // Text box
+        const boxX = cardX + 28;
+        const boxY = imgY + imgSize + 24;
+        const boxW = cardW - 56;
+        const boxH = cardH - (boxY - cardY) - 28;
 
-        // In some locked-down browsers, download may still be blocked.
-        // So we ALSO show the preview to be safe.
-        v.previewImg.src = canvas.toDataURL('image/png');
-        v.previewBox.style.display = 'block';
-      }, 'image/png');
-    });
+        ctx.fillStyle = 'rgba(0,0,0,0.12)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+        ctx.lineWidth = 2;
+        ctx.roundRect(boxX, boxY, boxW, boxH, 18);
+        ctx.fill(); ctx.stroke();
 
-    // Initial
-    showHome();
-    setCandidate('A');
-    updateVerdictPreview('A');
-    updateWordCount();
+        // Text
+        const textPad = 22;
+        const maxWidth = boxW - textPad*2;
+        ctx.fillStyle = '#eef2ff';
+        ctx.font = '500 20px system-ui, Segoe UI, Arial';
+        const content = text || "(No text written.)";
+        const lines = wrapLines(ctx, content, maxWidth);
+        const lineHeight = 30;
+        const maxLines = Math.floor((boxH - textPad*2) / lineHeight);
+        const shown = lines.slice(0, maxLines);
+
+        let y = boxY + textPad + 28;
+        for (const line of shown){
+          ctx.fillText(line, boxX + textPad, y);
+          y += lineHeight;
+        }
+        if (lines.length > maxLines){
+          ctx.fillStyle = 'rgba(255,255,255,0.65)';
+          ctx.font = '600 16px system-ui, Segoe UI, Arial';
+          ctx.fillText('…(text continues)', boxX + textPad, boxY + boxH - 18);
+        }
+
+        // Convert to Blob and download
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            // If blob fails, show preview
+            verdictUI.previewImg.src = canvas.toDataURL('image/png');
+            verdictUI.previewBox.style.display = 'block';
+            return;
+          }
+
+          const filename = `final_verdict_${chosenId}.png`;
+          const url = URL.createObjectURL(blob);
+
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+
+          // Try download
+          a.click();
+
+          // Cleanup
+          setTimeout(() => {
+            URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+          }, 150);
+
+          // In some locked-down browsers, download may still be blocked.
+          // So we ALSO show the preview to be safe.
+          verdictUI.previewImg.src = canvas.toDataURL('image/png');
+          verdictUI.previewBox.style.display = 'block';
+        }, 'image/png');
+      });
+
+      // Initial
+      showHome();
+      setCandidate('A');
+      updateVerdictPreview('A');
+      updateWordCount();
+    })();
   </script>
 </body>
 </html>
