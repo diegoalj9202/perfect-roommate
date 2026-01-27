@@ -658,6 +658,52 @@
       font-weight: 700;
     }
     .dict-link:hover { text-decoration: underline; }
+
+    /* --- AUDIO PANEL STYLES --- */
+    .audio-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .audio-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+      padding: 12px;
+      border-radius: 16px;
+    }
+    .audio-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--line);
+      background: #000;
+    }
+    .audio-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .audio-info b { font-size: 15px; color: var(--text); }
+    .audio-info span { font-size: 12px; color: var(--muted); }
+    
+    audio {
+      height: 36px;
+      width: 100%;
+      max-width: 200px;
+      border-radius: 20px;
+    }
+    
+    /* Mobile adjustments for audio player */
+    @media (max-width: 500px) {
+      .audio-item { flex-direction: column; text-align: center; }
+      .audio-info { align-items: center; }
+      audio { max-width: 100%; margin-top: 8px; }
+    }
   </style>
 </head>
 <body>
@@ -683,6 +729,15 @@
             <div class="btn-text">
               <div class="name">Home</div>
               <div class="tag">Scenario</div>
+            </div>
+          </button>
+          
+          <!-- AUDIO TAB BUTTON -->
+          <button class="tab-btn" data-tab="audio" aria-selected="false">
+            <div class="badge" style="background:rgba(255, 255, 255, 0.1); color:#fff;">🎧</div>
+            <div class="btn-text">
+              <div class="name">Audio</div>
+              <div class="tag">Interviews</div>
             </div>
           </button>
 
@@ -777,6 +832,55 @@
         </div>
       </main>
 
+      <!-- AUDIO PANEL -->
+      <main class="card panel" id="panel-audio" aria-live="polite">
+        <h2>Candidate Interviews</h2>
+        <p class="subtitle" style="margin-bottom:20px;">Listen to each candidate introduce themselves before you decide.</p>
+        
+        <div class="audio-list">
+          
+          <!-- Nina -->
+          <div class="audio-item">
+            <img src="images/nina.jpg" alt="Nina" class="audio-thumb" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48cmVjdCB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjU1JSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxMiI+RXJyb3I8L3RleHQ+PC9zdmc+'">
+            <div class="audio-info">
+              <b>Candidate A: Nina</b>
+              <span>The Friendly Hurricane</span>
+            </div>
+            <audio controls controlsList="nodownload">
+              <source src="audios/nina.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+
+          <!-- Daniel -->
+          <div class="audio-item">
+            <img src="images/daniel.jpg" alt="Daniel" class="audio-thumb" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48cmVjdCB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjU1JSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxMiI+RXJyb3I8L3RleHQ+PC9zdmc+'">
+            <div class="audio-info">
+              <b>Candidate B: Daniel</b>
+              <span>The Quiet Controller</span>
+            </div>
+            <audio controls controlsList="nodownload">
+              <source src="audios/daniel.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+
+          <!-- Leo -->
+          <div class="audio-item">
+            <img src="images/leo.jpg" alt="Leo" class="audio-thumb" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48cmVjdCB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjU1JSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxMiI+RXJyb3I8L3RleHQ+PC9zdmc+'">
+            <div class="audio-info">
+              <b>Candidate C: Leo</b>
+              <span>The Chill Drifter</span>
+            </div>
+            <audio controls controlsList="nodownload">
+              <source src="audios/leo.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+
+        </div>
+      </main>
+
       <!-- CANDIDATE PANEL -->
       <main class="card panel" id="panel-candidates" aria-live="polite">
         <div class="hero">
@@ -792,13 +896,13 @@
 
           <div class="bio">
             <div class="topline">
-              <h2 id="nameAge">Nina Torres (28)</h2>
-              <span class="pill" id="tagline"><span class="dot"></span> The Friendly Hurricane</span>
+              <h2 id="nameAge">Candidate Name</h2>
+              <span class="pill" id="tagline"><span class="dot"></span> Tagline</span>
             </div>
 
             <div class="meta">
-              <div class="box"><b>Job Title:</b><br><span id="jobTitle">Event assistant</span></div>
-              <div class="box"><b>Style:</b><br><span id="styleHint">Social • Loud • Generous</span></div>
+              <div class="box"><b>Job Title:</b><br><span id="jobTitle">Job</span></div>
+              <div class="box"><b>Style:</b><br><span id="styleHint">Style</span></div>
             </div>
 
             <div class="controls">
@@ -1011,6 +1115,7 @@
 
       // Panels
       const homePanel = document.getElementById('panel-home');
+      const audioPanel = document.getElementById('panel-audio'); // NEW
       const candidatesPanel = document.getElementById('panel-candidates');
       const verdictPanel = document.getElementById('panel-verdict');
 
@@ -1101,15 +1206,18 @@
 
       function showPanel(which){
         homePanel.classList.remove('active');
+        audioPanel.classList.remove('active'); // NEW
         candidatesPanel.classList.remove('active');
         verdictPanel.classList.remove('active');
 
         if(which === 'home') homePanel.classList.add('active');
+        if(which === 'audio') audioPanel.classList.add('active'); // NEW
         if(which === 'candidates') candidatesPanel.classList.add('active');
         if(which === 'verdict') verdictPanel.classList.add('active');
       }
 
       function showHome(){ showPanel('home'); }
+      function showAudio(){ showPanel('audio'); } // NEW
       function showCandidates(){
         showPanel('candidates');
         setCandidate(lastViewedCandidateId || 'A');
@@ -1132,6 +1240,8 @@
 
           if (tab === 'home'){
             showHome();
+          } else if (tab === 'audio'){ // NEW
+            showAudio();
           } else if (tab === 'verdict'){
             showVerdict();
           } else {
